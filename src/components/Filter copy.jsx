@@ -97,7 +97,7 @@ export default function Filter() {
     }
   }
 
-  if (isFetching) return <Loader title="Loading songs..." />;
+  if (isFetching) return <Loader title="Loading Products..." />;
   if (error) return <Error />;
 
   // categoryData = categoryData.map((categoryElement) => {

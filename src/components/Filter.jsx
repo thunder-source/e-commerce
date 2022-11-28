@@ -37,14 +37,14 @@ export default function Filter() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const { data, isFetching, error } = useGetProductsQuery();
 
-  if (isFetching) return <Loader title="Loading songs..." />;
+  if (isFetching) return <Loader title="Loading Products..." />;
   if (error) return <Error />;
 
   return (
     <div className="bg-white w-full">
       <div>
         <main className="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pt-12 pb-6">
+          <div className="flex items-baseline justify-between border-b border-gray-200 pt-10 pb-6">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               New Arrivals
             </h1>

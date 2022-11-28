@@ -163,6 +163,9 @@
 
 /* ******************* First_nav_bar start ******************* */
 .First_nav_bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
   background-color: #131921;
   height: 60px;
   width: 100%;
@@ -172,6 +175,7 @@
   padding: 0px 0.5rem 0rem 0px;
   align-items: center;
   align-content: center;
+  z-index: 10;
 }
 
 .First_nav_bar_logo img {
@@ -370,10 +374,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0px;
-  z-index: 10;
+  /* z-index: 10; */
 }
 
 .Third_nav_bar_left ul {

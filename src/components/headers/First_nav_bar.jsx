@@ -1,8 +1,11 @@
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { useDispatch } from "react-redux";
+import { toggleCart } from "../../redux/features/cartSlice";
 
 const First_nav_bar = () => {
+  const dispatch = useDispatch();
   return (
     <div className="First_nav_bar" id="home">
       <div className="First_nav_bar_logo">
@@ -10,7 +13,7 @@ const First_nav_bar = () => {
       </div>
       <div className="First_nav_bar_select">
         <select name="Prime Video">
-          <option value="Prime Video">Prime video</option>
+          <option value="Prime Video">All</option>
           <option value="saab">Saab </option>
           <option value="opel">Opel </option>
           <option value="audi">Audi </option>
@@ -34,7 +37,10 @@ const First_nav_bar = () => {
         Returns <br />& Orders
       </div>
 
-      <div className="First_nav_bar_cart">
+      <div
+        onClick={() => dispatch(toggleCart())}
+        className="First_nav_bar_cart"
+      >
         <AddShoppingCartIcon />
         <span>Cart</span>
       </div>

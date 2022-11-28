@@ -6,7 +6,7 @@ const Third_nav_bar = () => {
       <div className="Third_nav_bar_left ">
         <ul>
           <li className="Third_nav_bar_left_first_child">
-            <a href="#">prime video</a>
+            <a href="#">Amazon</a>
           </li>
           <li>
             <a href="#">Home</a>

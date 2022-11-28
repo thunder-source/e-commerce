@@ -83,7 +83,7 @@ function App() {
   }, [isFetching]);
 
   return (
-    <div className="App_container bg-black">
+    <div className="App_container bg-white">
       <First_nav_bar />
       <Second_nav_bar />
       <Third_nav_bar />
