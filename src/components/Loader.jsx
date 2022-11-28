@@ -1,5 +1,3 @@
-import "./loader";
-
 const Loader = ({ title }) => (
   <div className="w-full flex justify-center items-center flex-col">
     <section className="wrapper">

@@ -41,7 +41,7 @@ const sortMethod = (option, data) => {
     //
     // if (option.name == "Best Rating") {
     //   let newShort = data.products.sort((a, b) => {
-    //     console.log(a, b);
+    console.log(a, b);
     //     return a.brand.localeCompare(b.brand);
     //   });
     //   console.log(newShort);
