@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
@@ -17,9 +17,8 @@ import {
 } from "../redux/features/filterSlice";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
   { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
+  { name: "Discount", href: "#", current: false },
   { name: "Price: Low to High", href: "#", current: false },
   { name: "Price: High to Low", href: "#", current: false },
 ];
@@ -27,15 +26,51 @@ const sortOptions = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+const sortMethod = (option, data) => {
+  console.log(data);
+  sortOptions.map((ele, index) => {
+    if (option.name === ele.name) {
+      if (sortOptions[index].current) {
+        sortOptions[index].current = false;
+      } else {
+        sortOptions[index].current = true;
+      }
+    } else {
+      sortOptions[index].current = false;
+    }
+    //
+    // if (option.name == "Best Rating") {
+    //   let newShort = data.products.sort((a, b) => {
+    //     console.log(a, b);
+    //     return a.brand.localeCompare(b.brand);
+    //   });
+    //   console.log(newShort);
+    // }
+  });
+  // console.log(data);
+};
 
+// console.log(option.name);
 export default function Filter() {
   const dispatch = useDispatch();
   const { filter, selectFilter, categoryFilteredData } = useSelector(
     (state) => state.filter
   );
+  const { data, isFetching, error } = useGetProductsQuery();
+  // useState[(sortOptions, setSortOptions)] = useState([
+  //   { name: "Most Popular", href: "#", current: true },
+  //   { name: "Best Rating", href: "#", current: false },
+  //   { name: "Newest", href: "#", current: false },
+  //   { name: "Price: Low to High", href: "#", current: false },
+  //   { name: "Price: High to Low", href: "#", current: false },
+  // ]);
+
+  // useEffect(() => {
+  //   console.log("sam");
+  // }, [sortOptions]);
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState("");
-  const { data, isFetching, error } = useGetProductsQuery();
 
   if (isFetching) return <Loader title="Loading Products..." />;
   if (error) return <Error />;
@@ -77,6 +112,7 @@ export default function Filter() {
                           {({ active }) => (
                             <a
                               href={option.href}
+                              onClick={(e) => sortMethod(option, data)}
                               className={classNames(
                                 option.current
                                   ? "font-medium text-gray-900"
@@ -224,3 +260,63 @@ export default function Filter() {
     </div>
   );
 }
+
+// const studios = [
+//   {
+//     name: "Whole Yoga",
+//     price: "$17.00"
+//   },
+//   {
+//     name: "Rino Yoga Social",
+//     price: "Suggested Donation"
+//   },
+//   {
+//     name: "Samadhi Yoga",
+//     price: "$20.00"
+//   },
+//   {
+//     name: "Corepower Yoga",
+//     price: "$25.00"
+//   },
+//   {
+//     name: "The River Yoga",
+//     price: "$20.00"
+//   },
+//   {
+//     name: "Endorphin Yoga",
+//     price: "$10.00"
+//   },
+//   {
+//     name: "Kindness Yoga",
+//     price: "$20.00"
+//   },
+//   {
+//     name: "Yoga High",
+//     price: "$15.00"
+//   },
+//   {
+//     name: "Freyja Project",
+//     price: "$22.00"
+//   },
+//   {
+//     name: "Kula Yoga",
+//     price: "$17.00"
+//   }
+//  ]
+
+// priceFilter = (vals) => {
+//   return vals.sort((a,b) => {
+//     const aPrice = a.price[0] === '$' ? parseFloat(a.price.slice(1,-1)) : 0;
+//     const bPrice = b.price[0] === '$' ? parseFloat(b.price.slice(1,-1)) : 0;
+//     return aPrice - bPrice;
+//   });
+// }
+
+// console.log(priceFilter(studios));
+
+// 1: Create a User Interface for the product listing page. ✅
+// 2: Products should be listed separated by category.✅
+// 3: Users should be able to filter products by  category.✅    -------------- brand,
+// 4: Users should be able to sort products by rating, discount and price.
+// 5: If the user tries to buy a product where the stock is less than 50 numbers, prompt a message "hurry! only a few items left".✅
+// 6: The UI should have 'add to cart functionality.✅

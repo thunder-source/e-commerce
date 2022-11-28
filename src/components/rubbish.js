@@ -143,6 +143,26 @@
 //   );
 // })}
 
+// card category
+// let selectedCategoryFlag = true;
+// for (const i of selectFilter) {
+//   if (i.checked) {
+//     selectedCategoryFlag = false;
+//     setSelectedCategory(i);
+//     break;
+//   }
+// }
+// if (selectedCategoryFlag) {
+//   setSelectedCategory("");
+// }
+// if (
+//   selectedCategory !== "" &&
+//   selectedCategory.value === element.brand
+// ) {
+//   return <Card key={element.id} data={element} />;
+// } else {
+// }
+
 // ''''''''''''''''''''''''''''''''Filter
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";

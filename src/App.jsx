@@ -15,7 +15,9 @@ import {
   addFilter,
   addSelectFilter,
 } from "./redux/features/filterSlice";
-
+import Loader from "./components/Loader/Loader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   const { data, isFetching, error } = useGetProductsQuery();
   const dispatch = useDispatch();
@@ -82,6 +84,8 @@ function App() {
     }
   }, [isFetching]);
 
+  if (isFetching) return <Loader />;
+
   return (
     <div className="App_container bg-white">
       <First_nav_bar />
@@ -92,6 +96,18 @@ function App() {
       <Second_Last_footer />
       <Last_footer />
       <Cart />
+      <ToastContainer
+        position="top-left"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

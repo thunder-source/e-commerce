@@ -1,10 +1,13 @@
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleCart } from "../../redux/features/cartSlice";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Badge } from "@mui/material";
 
 const First_nav_bar = () => {
+  const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   return (
     <div className="First_nav_bar" id="home">
@@ -41,7 +44,14 @@ const First_nav_bar = () => {
         onClick={() => dispatch(toggleCart())}
         className="First_nav_bar_cart"
       >
-        <AddShoppingCartIcon />
+        {cart.length > 0 ? (
+          <Badge badgeContent={cart.length} color="primary">
+            <ShoppingCartIcon />
+          </Badge>
+        ) : (
+          <AddShoppingCartIcon />
+        )}
+
         <span>Cart</span>
       </div>
     </div>

@@ -18,14 +18,20 @@ const cartSlice = createSlice({
           flag = false;
           state.cart[index].quantity = state.cart[index].quantity + 1;
           state.totalAmount += parseInt(
-            ((payload.price % payload.discountPercentage) * 100).toFixed(0)
+            (
+              payload.price -
+              (payload.price * payload.discountPercentage) / 100
+            ).toFixed(0)
           );
         }
       });
       if (flag) {
         state.cart.push({ ...payload, quantity: 1 });
         state.totalAmount += parseInt(
-          ((payload.price % payload.discountPercentage) * 100).toFixed(0)
+          (
+            payload.price -
+            (payload.price * payload.discountPercentage) / 100
+          ).toFixed(0)
         );
       }
     },
@@ -38,8 +44,10 @@ const cartSlice = createSlice({
             state.cart.splice(index, index);
           }
           state.totalAmount -= parseInt(
-            ((payload.price % payload.discountPercentage) * 100).toFixed(0) *
-              ele.quantity
+            (
+              payload.price -
+              (payload.price * payload.discountPercentage) / 100
+            ).toFixed(0) * ele.quantity
           );
         }
       });
@@ -50,8 +58,9 @@ const cartSlice = createSlice({
           state.cart[index].quantity = state.cart[index].quantity + 1;
           state.totalAmount += parseInt(
             (
-              (state.cart[index].price % state.cart[index].discountPercentage) *
-              100
+              state.cart[index].price -
+              (state.cart[index].price * state.cart[index].discountPercentage) /
+                100
             ).toFixed(0)
           );
         }
@@ -63,8 +72,9 @@ const cartSlice = createSlice({
           state.cart[index].quantity = state.cart[index].quantity - 1;
           state.totalAmount -= parseInt(
             (
-              (state.cart[index].price % state.cart[index].discountPercentage) *
-              100
+              state.cart[index].price -
+              (state.cart[index].price * state.cart[index].discountPercentage) /
+                100
             ).toFixed(0)
           );
         }

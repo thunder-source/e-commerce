@@ -115,9 +115,10 @@ export default function Cart() {
                                       <p className="ml-4">
                                         $
                                         {(
-                                          (product.price %
-                                            product.discountPercentage) *
-                                          100
+                                          product.price -
+                                          (product.price *
+                                            product.discountPercentage) /
+                                            100
                                         ).toFixed(0) * product.quantity}
                                       </p>
                                     </div>

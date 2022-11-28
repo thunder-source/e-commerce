@@ -1,7 +1,7 @@
-import "./loader";
+import "./loader.css";
 
 const Loader = ({ title }) => (
-  <div className="w-full flex justify-center items-center flex-col">
+  <div className="w-full flex h-screen justify-center items-center flex-col">
     <section className="wrapper">
       <div className="spinner">
         <i></i>

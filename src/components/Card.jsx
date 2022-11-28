@@ -1,13 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { addItem, toggleCart } from "../redux/features/cartSlice";
 export default function Card({ data }) {
   const dispatch = useDispatch();
   const { showCart } = useSelector((state) => state.cart);
-  const addItemToCart = () => {
-    dispatch(addItem(data));
-    dispatch(toggleCart());
-  };
   const {
     title,
     price,
@@ -17,7 +14,33 @@ export default function Card({ data }) {
     rating,
     thumbnail,
     description,
+    stock,
   } = data;
+  const addItemToCart = () => {
+    dispatch(addItem(data));
+    toast(`${title} Added to the cart 🛒`, {
+      position: "top-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    if (stock <= 50) {
+      toast(`hurry! only a few items left`, {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
     <div className="w-[340px] min-h-[450px] flex flex-col  rounded-2xl shadow-md dark:bg-gray-800 dark:border-gray-700">
       <a href="#">
@@ -111,11 +134,13 @@ export default function Card({ data }) {
               </span>
             </div>
             <span className="text-3xl ml-2 font-bold text-gray-900 dark:text-white ">
-              ${((price % discountPercentage) * 100).toFixed(0)}
+              ${(price - (price * discountPercentage) / 100).toFixed(0)}
             </span>
           </div>
           <button
-            onClick={() => addItemToCart()}
+            onClick={() => {
+              addItemToCart();
+            }}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Add to cart
