@@ -16,13 +16,13 @@ import {
   addSelectFilter,
 } from "./redux/features/filterSlice";
 import Loader from "./components/Loader/Loader";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
-  const { data, isFetching, error } = useGetProductsQuery();
+  const { data, isFetching } = useGetProductsQuery();
   const dispatch = useDispatch();
 
-  // this add the category and brand name to the store
+  // this add the category and brand name to the filter and for creating a new modifiedApi with the products price
   useEffect(() => {
     const categoryMap = new Map();
     const brandMap = new Map();

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
@@ -7,70 +7,134 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import Card_categories from "./Card_categories";
 import { useGetProductsQuery } from "../redux/services/eCommerceApi";
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateFilter,
   UpdateSelectFilter,
 } from "../redux/features/filterSlice";
+import Card from "./Card";
+import Card_categories from "./Card_categories";
 
 const sortOptions = [
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Discount", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+  { name: "Best Rating", method: "rating", current: false },
+  { name: "Discount", method: "discountPercentage", current: false },
+  {
+    name: "Price: Low to High",
+    method: "priceIncrease",
+    current: false,
+  },
+  {
+    name: "Price: High to Low",
+    method: "priceDecrease",
+    current: false,
+  },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-const sortMethod = (option, data) => {
-  console.log(data);
-  sortOptions.map((ele, index) => {
-    if (option.name === ele.name) {
-      if (sortOptions[index].current) {
-        sortOptions[index].current = false;
-      } else {
-        sortOptions[index].current = true;
-      }
-    } else {
-      sortOptions[index].current = false;
-    }
-    //
-    // if (option.name == "Best Rating") {
-    //   let newShort = data.products.sort((a, b) => {
-    console.log(a, b);
-    //     return a.brand.localeCompare(b.brand);
-    //   });
-    //   console.log(newShort);
-    // }
-  });
-  // console.log(data);
-};
 
-// console.log(option.name);
 export default function Filter() {
   const dispatch = useDispatch();
+  const { data, isFetching, error } = useGetProductsQuery();
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { filter, selectFilter, categoryFilteredData } = useSelector(
     (state) => state.filter
   );
-  const { data, isFetching, error } = useGetProductsQuery();
-  // useState[(sortOptions, setSortOptions)] = useState([
-  //   { name: "Most Popular", href: "#", current: true },
-  //   { name: "Best Rating", href: "#", current: false },
-  //   { name: "Newest", href: "#", current: false },
-  //   { name: "Price: Low to High", href: "#", current: false },
-  //   { name: "Price: High to Low", href: "#", current: false },
-  // ]);
-
-  // useEffect(() => {
-  //   console.log("sam");
-  // }, [sortOptions]);
-
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState("");
+  console.log(selectedBrand);
+  const [sortData, setSortData] = useState(
+    JSON.parse(JSON.stringify(data.products))
+  );
+  const [changeInFilter, setChangeInFilter] = useState(false);
+
+  const sortMethod = (option) => {
+    sortOptions.map((ele, index) => {
+      setChangeInFilter(!changeInFilter);
+      if (option.name === ele.name) {
+        if (sortOptions[index].current) {
+          sortOptions[index].current = false;
+          setSortData((prev) => {
+            return prev.sort((a, b) => a.id - b.id);
+          });
+        } else {
+          sortOptions[index].current = true;
+
+          switch (sortOptions[index].method) {
+            case "priceIncrease":
+              setSortData((prev) => {
+                return prev.sort(function (a, b) {
+                  return (
+                    parseInt(
+                      (
+                        a.price -
+                        (a.price * a.discountPercentage) / 100
+                      ).toFixed(0)
+                    ) -
+                    parseInt(
+                      (
+                        b.price -
+                        (b.price * b.discountPercentage) / 100
+                      ).toFixed(0)
+                    )
+                  );
+                });
+              });
+              break;
+            case "discountPercentage":
+              setSortData((prev) => {
+                return prev.sort(function (a, b) {
+                  return b.discountPercentage - a.discountPercentage;
+                });
+              });
+              break;
+            case "rating":
+              setSortData((prev) => {
+                return prev.sort(function (a, b) {
+                  return b.rating - a.rating;
+                });
+              });
+              break;
+            case "priceDecrease":
+              setSortData((prev) => {
+                return prev.sort(function (a, b) {
+                  return (
+                    parseInt(
+                      (
+                        b.price -
+                        (b.price * b.discountPercentage) / 100
+                      ).toFixed(0)
+                    ) -
+                    parseInt(
+                      (
+                        a.price -
+                        (a.price * a.discountPercentage) / 100
+                      ).toFixed(0)
+                    )
+                  );
+                });
+              });
+              break;
+
+            default:
+              setSortData((prev) => {
+                return prev.sort();
+              });
+              break;
+          }
+
+          // if (sortOptions[index].method === "priceIncrease") {
+
+          // }
+        }
+      } else {
+        sortOptions[index].current = false;
+      }
+    });
+  };
+  useEffect(() => {}, [changeInFilter]);
 
   if (isFetching) return <Loader title="Loading Products..." />;
   if (error) return <Error />;
@@ -112,7 +176,7 @@ export default function Filter() {
                           {({ active }) => (
                             <a
                               href={option.href}
-                              onClick={(e) => sortMethod(option, data)}
+                              onClick={(e) => sortMethod(option)}
                               className={classNames(
                                 option.current
                                   ? "font-medium text-gray-900"
@@ -233,6 +297,7 @@ export default function Filter() {
                 <select
                   onChange={(e) => {
                     dispatch(UpdateSelectFilter(e.target.value));
+                    setSelectedBrand(e.target.value);
                   }}
                   className="px-4 py-3 w-full rounded-md  bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
                 >
@@ -251,7 +316,28 @@ export default function Filter() {
 
               {/* Product grid */}
               <div className="lg:col-span-3">
-                <Card_categories categoryData={categoryFilteredData} />
+                {/* <div className="w-full">
+                  <div className="w-full flex flex-col">
+                    <div className="w-full flex flex-wrap gap-4 mb-10">
+                     
+                        console.log(filter[0].options);
+                        for (const i of filter[0]?.options || []) {
+                          if (i.checked === i.value) {
+                            return sortData.map((element) => {
+                              // filter[0].options.map((ele) => console.log(ele));
+                              return <Card key={element.id} data={element} />;
+                            });
+                          }
+                        }
+                      } 
+
+                    </div>
+                  </div>
+                </div>  */}
+                <Card_categories
+                  selectedBrand={selectedBrand}
+                  sortedData={sortData}
+                />
               </div>
             </div>
           </section>
@@ -260,59 +346,6 @@ export default function Filter() {
     </div>
   );
 }
-
-// const studios = [
-//   {
-//     name: "Whole Yoga",
-//     price: "$17.00"
-//   },
-//   {
-//     name: "Rino Yoga Social",
-//     price: "Suggested Donation"
-//   },
-//   {
-//     name: "Samadhi Yoga",
-//     price: "$20.00"
-//   },
-//   {
-//     name: "Corepower Yoga",
-//     price: "$25.00"
-//   },
-//   {
-//     name: "The River Yoga",
-//     price: "$20.00"
-//   },
-//   {
-//     name: "Endorphin Yoga",
-//     price: "$10.00"
-//   },
-//   {
-//     name: "Kindness Yoga",
-//     price: "$20.00"
-//   },
-//   {
-//     name: "Yoga High",
-//     price: "$15.00"
-//   },
-//   {
-//     name: "Freyja Project",
-//     price: "$22.00"
-//   },
-//   {
-//     name: "Kula Yoga",
-//     price: "$17.00"
-//   }
-//  ]
-
-// priceFilter = (vals) => {
-//   return vals.sort((a,b) => {
-//     const aPrice = a.price[0] === '$' ? parseFloat(a.price.slice(1,-1)) : 0;
-//     const bPrice = b.price[0] === '$' ? parseFloat(b.price.slice(1,-1)) : 0;
-//     return aPrice - bPrice;
-//   });
-// }
-
-// console.log(priceFilter(studios));
 
 // 1: Create a User Interface for the product listing page. ✅
 // 2: Products should be listed separated by category.✅

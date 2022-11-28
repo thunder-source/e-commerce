@@ -7,7 +7,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Badge } from "@mui/material";
 
 const First_nav_bar = () => {
-  const { cart } = useSelector((state) => state.cart);
+  const { totalQuantity } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   return (
     <div className="First_nav_bar" id="home">
@@ -44,8 +44,8 @@ const First_nav_bar = () => {
         onClick={() => dispatch(toggleCart())}
         className="First_nav_bar_cart"
       >
-        {cart.length > 0 ? (
-          <Badge badgeContent={cart.length} color="primary">
+        {totalQuantity > 0 ? (
+          <Badge badgeContent={totalQuantity} color="primary">
             <ShoppingCartIcon />
           </Badge>
         ) : (

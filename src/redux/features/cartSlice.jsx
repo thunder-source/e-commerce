@@ -4,6 +4,7 @@ const initialState = {
   cart: [],
   showCart: false,
   totalAmount: 0,
+  totalQuantity: 0,
 };
 
 const cartSlice = createSlice({
@@ -23,6 +24,7 @@ const cartSlice = createSlice({
               (payload.price * payload.discountPercentage) / 100
             ).toFixed(0)
           );
+          state.totalQuantity += 1;
         }
       });
       if (flag) {
@@ -33,6 +35,7 @@ const cartSlice = createSlice({
             (payload.price * payload.discountPercentage) / 100
           ).toFixed(0)
         );
+        state.totalQuantity += 1;
       }
     },
     removeItem: (state, { payload }) => {
@@ -49,6 +52,7 @@ const cartSlice = createSlice({
               (payload.price * payload.discountPercentage) / 100
             ).toFixed(0) * ele.quantity
           );
+          state.totalQuantity -= ele.quantity;
         }
       });
     },
@@ -63,6 +67,7 @@ const cartSlice = createSlice({
                 100
             ).toFixed(0)
           );
+          state.totalQuantity += 1;
         }
       });
     },
@@ -77,6 +82,7 @@ const cartSlice = createSlice({
                 100
             ).toFixed(0)
           );
+          state.totalQuantity -= 1;
         }
       });
     },
